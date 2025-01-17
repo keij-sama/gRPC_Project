@@ -1,3 +1,3 @@
-module sso
+module github.com/keij-sama/gPRC_Project
 
-go 1.21
+go 1.20
