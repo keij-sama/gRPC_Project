@@ -1,3 +1,5 @@
-module github.com/keij-sama/gRPC_Project
+module github.com/keij-sama/gRPC_Project/sso
 
-go 1.20
+go 1.22.2
+
+replace github.com/keij-sama/gRPC_Project/protos => ../protos
