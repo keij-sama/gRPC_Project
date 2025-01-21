@@ -4,4 +4,11 @@ go 1.22.2
 
 replace github.com/keij-sama/gRPC_Project/protos => ../protos
 
-require github.com/keij-sama/gRPC_Project/protos v0.0.0-20250117204740-8de86ab62b5d // indirect
+require github.com/ilyakaznacheev/cleanenv v1.5.0
+
+require (
+	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
+)
