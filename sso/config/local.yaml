@@ -1,6 +1,6 @@
 env: "local" # dev, prod
-storage_patch: "./storage/soo.db"
-tolen_ttl: 1h
+storage_path: "./storage/soo.db" 
+token_ttl: 1h
 grpc: 
   port: 44044
   timeout: 10h
