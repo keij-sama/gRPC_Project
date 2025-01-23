@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/keij-sama/gRPC_Project/sso/iternal/app"
 	"github.com/keij-sama/gRPC_Project/sso/iternal/config"
 )
 

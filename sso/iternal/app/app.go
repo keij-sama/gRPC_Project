@@ -3,10 +3,12 @@ package app
 import (
 	"log/slog"
 	"time"
+
+	grpcapp "github.com/keij-sama/gRPC_Project/sso/iternal/app/grpc"
 )
 
 type App struct {
-	GRPCSrv *grpcapp.Server
+	GRPCSrv *grpcapp.App
 }
 
 func New(
