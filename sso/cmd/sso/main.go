@@ -32,7 +32,9 @@ func main() {
 
 	fmt.Println(cfg)
 
-	// TODO: инициализировать логгер
+	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
+
+	application.GRPCSrv.MustRun()
 
 	// TODO: инициализировать приложение (app)
 
