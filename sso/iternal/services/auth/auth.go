@@ -2,11 +2,14 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
-	"sso/internal/domain/models" //заменить на гитхаб
 	"time"
 
+	"github.com/keij-sama/gRPC_Project/sso/iternal/domain/models"
+	"github.com/keij-sama/gRPC_Project/sso/iternal/storage"
+	"github.com/keij-sama/gRPC_Project/sso/lib/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -34,6 +37,10 @@ type AppProvider interface {
 	App(ctx context.Context, appID int) (models.App, error)
 }
 
+var (
+	ErrInvalidCredentials = errors.New("invalid credentials")
+)
+
 // New returns a new instance of the Auth service.
 func New(
 	log *slog.Logger,
@@ -57,13 +64,51 @@ func (a *Auth) Login(
 	password string,
 	appID int,
 ) (string, error) {
-	panic("not implementes")
+	const op = "Auth.Login"
+
+	log := a.log.With(
+		slog.String("op", op),
+		slog.String("username", email),
+	)
+	log.Info("attenpting to login user")
+
+	user, err := a.usrProvider.User(ctx, email)
+	if err != nil {
+		if errors.Is(err, storage.ErrUserNotFound) {
+			a.log.Warn("user not found", sl.Err(err))
+
+			return "", fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
+		}
+		a.log.Error("failed to get user", sl.Err(err))
+
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
+	if err := bcrypt.CompareHashAndPassword(user.PassHash, []byte(password)); err != nil {
+		a.log.Info("invalid credentials", sl.Err(err))
+
+		return "", fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
+	}
+
+	app, err := a.appProvider.App(ctx, appID)
+	if err != nil {
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
+	log.Info("user logger in successfully")
+
+	token, err := jwt.NewToken(user, app, a.tokenTTL)
+	if err != nil {
+		a.log.Error("failed to generate token", sl.Err(err))
+
+		return "", fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
+	}
+
+	return token, nil
 }
 
 func (a *Auth) RegisterNewUser(
 	ctx context.Context,
 	email string,
-	password string,
+	pass string,
 ) (int64, error) {
 	const op = "auth.RegisterNewUser"
 
@@ -91,5 +136,21 @@ func (a *Auth) IsAdmin(
 	ctx context.Context,
 	userID int64,
 ) (bool, error) {
-	panic("not implementes")
+	const op = "Auth.IsAdmin"
+
+	log := a.log.With(
+		slog.String("op", op),
+		slog.Int64("user_id", userID),
+	)
+
+	log.Info("checking if user is admin")
+
+	isAdmin, err := a.usrProvider.IsAdmin(ctx, userID)
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("checked if user is admin", slog.Bool("is_admin", isAdmin))
+
+	return isAdmin, nil
 }
