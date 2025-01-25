@@ -10,6 +10,7 @@ import (
 	"github.com/keij-sama/gRPC_Project/sso/iternal/domain/models"
 	"github.com/keij-sama/gRPC_Project/sso/iternal/storage"
 	"github.com/keij-sama/gRPC_Project/sso/lib/jwt"
+	"github.com/keij-sama/gRPC_Project/sso/lib/logger/sl"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -39,6 +40,8 @@ type AppProvider interface {
 
 var (
 	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrInvalidAppID       = errors.New("invalid app id")
+	ErrUserExist          = errors.New("user already exist")
 )
 
 // New returns a new instance of the Auth service.
@@ -125,10 +128,15 @@ func (a *Auth) RegisterNewUser(
 	}
 	id, err := a.usrSaver.SaveUser(ctx, email, passHash)
 	if err != nil {
+		if errors.Is(err, storage.ErrUserExist) {
+			log.Warn("user nalready exist", sl.Err(err))
+			return 0, fmt.Errorf("%s: %w", op, ErrUserExist)
+		}
 		log.Error("failed to save user", sl.Err(err))
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 	log.Info("user registered")
+
 	return id, nil
 }
 
@@ -147,7 +155,10 @@ func (a *Auth) IsAdmin(
 
 	isAdmin, err := a.usrProvider.IsAdmin(ctx, userID)
 	if err != nil {
-		return false, fmt.Errorf("%s: %w", op, err)
+		if errors.Is(err, storage.ErrAppNotFound) {
+			log.Warn("user not found", sl.Err(err))
+		}
+		return false, fmt.Errorf("%s: %w", op, ErrInvalidAppID)
 	}
 
 	log.Info("checked if user is admin", slog.Bool("is_admin", isAdmin))
