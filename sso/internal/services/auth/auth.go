@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/keij-sama/gRPC_Project/sso/iternal/domain/models"
+	"github.com/keij-sama/gRPC_Project/sso/iternal/lib/jwt"
+	"github.com/keij-sama/gRPC_Project/sso/iternal/lib/logger/sl"
 	"github.com/keij-sama/gRPC_Project/sso/iternal/storage"
-	"github.com/keij-sama/gRPC_Project/sso/lib/jwt"
-	"github.com/keij-sama/gRPC_Project/sso/lib/logger/sl"
 	"golang.org/x/crypto/bcrypt"
 )
 
