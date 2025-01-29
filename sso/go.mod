@@ -6,7 +6,7 @@ replace github.com/keij-sama/gRPC_Project/protos => ../protos
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/golang-migrate/migrate v3.5.4+incompatible
+	github.com/golang-migrate/migrate/v4 v4.18.2
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/keij-sama/gRPC_Project/protos v0.1.0
 	golang.org/x/crypto v0.32.0
@@ -15,8 +15,12 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	golang.org/x/net v0.32.0 // indirect
+	github.com/mattn/go-sqlite3 v1.14.22 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a // indirect

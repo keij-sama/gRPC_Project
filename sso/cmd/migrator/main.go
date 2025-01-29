@@ -1,11 +1,13 @@
-package migrator
+package main
 
 import (
 	"errors"
 	"flag"
 	"fmt"
 
-	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
