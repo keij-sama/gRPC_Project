@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/keij-sama/gRPC_Project/sso/iternal/app"
-	"github.com/keij-sama/gRPC_Project/sso/iternal/config"
+	"github.com/keij-sama/gRPC_Project/sso/internal/app"
+	"github.com/keij-sama/gRPC_Project/sso/internal/config"
 )
 
 const (
@@ -38,10 +38,6 @@ func main() {
 	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
 
 	go application.GRPCSrv.MustRun()
-
-	// TODO: инициализировать приложение (app)
-
-	// TODO: запустить gRPC-сервер приложения
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)

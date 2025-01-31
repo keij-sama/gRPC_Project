@@ -7,10 +7,10 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/keij-sama/gRPC_Project/sso/iternal/domain/models"
-	"github.com/keij-sama/gRPC_Project/sso/iternal/lib/jwt"
-	"github.com/keij-sama/gRPC_Project/sso/iternal/lib/logger/sl"
-	"github.com/keij-sama/gRPC_Project/sso/iternal/storage"
+	"github.com/keij-sama/gRPC_Project/sso/internal/domain/models"
+	"github.com/keij-sama/gRPC_Project/sso/internal/lib/jwt"
+	"github.com/keij-sama/gRPC_Project/sso/internal/lib/logger/sl"
+	"github.com/keij-sama/gRPC_Project/sso/internal/storage"
 	"golang.org/x/crypto/bcrypt"
 )
 

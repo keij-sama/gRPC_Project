@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/keij-sama/gRPC_Project/sso/iternal/domain/models"
+	"github.com/keij-sama/gRPC_Project/sso/internal/domain/models"
 )
 
 func NewToken(user models.User, app models.App, duration time.Duration) (string, error) {
