@@ -1,8 +1,10 @@
 package tests
 
 import (
-	"sso/tests/suite"
 	"testing"
+	"time"
+
+	"github.com/keij-sama/gRPC_Project/sso/tests/suite"
 
 	"github.com/brianvoe/gofakeit"
 	"github.com/dgrijalva/jwt-go"
@@ -41,13 +43,15 @@ func TestRegisterLogin_Login_HappyPath(t *testing.T) {
 	token := respLogin.GetToken()
 	require.NotEmpty(t, token)
 
+	loginTime := time.Now()
+
 	tokenParsed, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(appSecret), nil
 	})
-	require.NoError(t, token)
+	require.NoError(t, err)
 
 	claims, ok := tokenParsed.Claims.(jwt.MapClaims)
-	assert.True(t, ok)
+	require.True(t, ok)
 
 	assert.Equal(t, respReg.GetUserId(), int64(claims["uid"].(float64)))
 	assert.Equal(t, email, claims["email"].(string))
