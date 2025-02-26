@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -29,12 +28,6 @@ func main() {
 		slog.Int("prot", cfg.GRPC.Port),
 	)
 
-	log.Debug("debug message")
-	log.Error("error message")
-	log.Warn("warn message")
-
-	fmt.Println(cfg)
-
 	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
 
 	go application.GRPCSrv.MustRun()
@@ -42,13 +35,10 @@ func main() {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
-	sign := <-stop
-
-	log.Info("stopping application", slog.String("signal", sign.String()))
+	<-stop
 
 	application.GRPCSrv.Stop()
-
-	log.Info("application stop")
+	log.Info("Gracefully stopped")
 }
 
 func setupLogger(env string) *slog.Logger {

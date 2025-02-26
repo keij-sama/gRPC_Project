@@ -3,6 +3,7 @@ package suite
 import (
 	"context"
 	"net"
+	"os"
 	"strconv"
 	"testing"
 
@@ -26,7 +27,7 @@ func New(t *testing.T) (context.Context, *Suite) {
 	t.Helper()
 	t.Parallel()
 
-	cfg := config.MustLoadByPath("../config/local.yaml")
+	cfg := config.MustLoadByPath(configPath())
 
 	ctx, cancelCtx := context.WithTimeout(context.Background(), cfg.GRPC.Timeout)
 
@@ -37,7 +38,7 @@ func New(t *testing.T) (context.Context, *Suite) {
 
 	cc, err := grpc.DialContext(context.Background(),
 		grpcAddress(cfg),
-		grpc.WithTransportCredentials(insecure.NewCredentials()))
+		grpc.WithTransportCredentials(insecure.NewCredentials())) // Используем insecure-коннект для тестов
 	if err != nil {
 		t.Fatalf("grpc server connection failed: %v", err)
 	}
@@ -47,6 +48,16 @@ func New(t *testing.T) (context.Context, *Suite) {
 		Cfg:        cfg,
 		AuthClient: ssov1.NewAuthClient(cc),
 	}
+}
+
+func configPath() string {
+	const key = "CONFIG_PATH"
+
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+
+	return "../config/local.yaml"
 }
 
 func grpcAddress(cfg *config.Config) string {
